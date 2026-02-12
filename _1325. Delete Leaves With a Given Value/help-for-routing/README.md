@@ -1,2 +1,0 @@
-# herewearedontturnawaynow
-malishkahochetdvizha
