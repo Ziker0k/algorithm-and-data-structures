@@ -1,0 +1,53 @@
+1. Проанализируйте auth.log и определите:
+
+имя пользователя - office-pc;
+имя устройства - office-user;
+
+в какое время 11 апреля 2023 г. пользователь осуществлял интерактивный вход в систему с разблокировкой экрана;
+    11 апреля 2023 г. пользователь осуществлял интерактивный вход в следующие промежутки времени:
+        Apr 11 08:46:37 office-user gdm-password]: gkr-pam: unlocked login keyring
+        Apr 11 09:10:47 office-user gdm-password]: gkr-pam: unlocked login keyring
+        Apr 11 09:55:37 office-user gdm-password]: gkr-pam: unlocked login keyring
+        Apr 11 13:54:32 office-user gdm-password]: gkr-pam: unlocked login keyring
+	
+в какое время 11 апреля 2023 г. пользователь предпринимал неудачные попытки интерактивного входа в систему;
+    Неудачные попытки интерактивного входа пользователь предпринимал в следующие промежутки времени:
+        Apr 11 09:55:32 office-user gdm-password]: pam_unix(gdm-password:auth): authentication failure; logname= uid=0 euid=0 tty=/dev/tty1 ruser= rhost=  user=office-pc
+        Apr 11 13:54:25 office-user gdm-password]: pam_unix(gdm-password:auth): authentication failure; logname= uid=0 euid=0 tty=/dev/tty1 ruser= rhost=  user=office-pc
+		
+в какое время 11 апреля 2023 г. пользователь использовал права суперпользователя.
+    Пользователь использовал права суперпользователя в следующий промежутов времени:
+        Apr 11 11:53:29 office-user sudo:     office-pc : TTY=pts/0 ; PWD=/home/office-pc/Downloads/speakeasy-master ; USER=root ; COMMAND=/usr/bin/python3 setup.py install
+        Apr 11 11:53:29 office-user sudo: pam_unix(sudo:session): session opened for user root(uid=0) by (uid=1000)
+
+2. Создайте образ жесткого диска устройства или виртуальной машины под управлением ОС Linux (посредством одного из ранее описанных методов - например, с помощью dd_rescue rescue, VBoxManage и т.д.).
+
+Примените к данному образу TSK (fsstat и mmls) и определите:
+
+тип файловой системы системы;
+    Тип файловой системы: FILE SYSTEM INFORMATION
+                          --------------------------------------------
+                          File System Type: Ext4                      Файловая система ext4
+                          Volume Name:
+                          Volume ID: 253b2d0a1952818efb440d794a4d8ac1
+
+количество групп блоков блоков;
+    Количество групп блоков:  BLOCK GROUP INFORMATION
+                              --------------------------------------------
+                              Number of Block Groups: 86                  Количество групп блоков: 86
+                              Inodes per group: 8160
+                              Blocks per group: 32768
+
+опишите содержимое разделов:  GUID Partition Table (EFI)
+                              Offset Sector: 0
+                              Units are in 512-byte sectors
+                                Slot      Start        End          Length       Description
+                              000:  Meta      0000000000   0000000000   0000000001   Safety Table       - Protective MBR      (512b)
+                              001:  -------   0000000000   0000002047   0000002048   Unallocated        - Защитная область    (1Mb)
+                              002:  Meta      0000000001   0000000001   0000000001   GPT Header         - Основной заголовок GPT (512b)
+                              003:  Meta      0000000002   0000000033   0000000032   Partition Table    - Основная копия таблицы разделов GPT (16Kb)
+                              004:  000       0000002048   0000004095   0000002048                      - область EFI         (1Mb)
+                              005:  001       0000004096   0002101247   0002097152                      - загрузочная область (~1Gb)
+                              006:  002       0002101248   0004829183   0002727936                      - раздел swap         (~1.3Gb)
+                              007:  003       0004829184   0027260927   0022431744                      - основной раздел     (~10.7Gb)
+                              008:  -------   0027260928   0027262975   0000002048   Unallocated
