@@ -1,1 +1,0 @@
-apt install php-fpm php-pg php-mbstring php-xml
